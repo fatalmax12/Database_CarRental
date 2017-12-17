@@ -1,0 +1,52 @@
+use master
+go 
+drop database Car_Rental  
+go 
+create database Car_Rental  
+go 
+use Car_Rental
+go 
+
+
+CREATE TABLE Car
+(
+	CarN VARCHAR(20) PRIMARY KEY, 
+	RegNum VARCHAR(20)  NOT NULL UNIQUE,
+	Model VARCHAR(20) ,
+	RevDate DATETIME ,
+	DailyPay INT NOT NULL
+)
+
+CREATE TABLE Office
+(
+	RecN VARCHAR(20) PRIMARY KEY ,
+	OffCode VARCHAR(20)  NOT NULL UNIQUE,
+	City VARCHAR(30) ,
+	RName VARCHAR(30) ,
+	Addr VARCHAR(50)
+)
+
+CREATE TABLE Tenant
+(
+	ArN VARCHAR(20) PRIMARY KEY ,
+	LName VARCHAR(30) ,
+	FName VARCHAR(30) ,
+	MName VARCHAR(30) ,
+	Passport VARCHAR(20)  NOT NULL UNIQUE,
+	Addr VARCHAR(50)
+)
+
+CREATE TABLE Contract
+(
+	InvN VARCHAR(20) PRIMARY KEY ,
+	ArN VARCHAR(20) NOT NULL ,
+	CarN VARCHAR(20) NOT NULL ,
+	GetRecN VARCHAR(20) NOT NULL	FOREIGN KEY  REFERENCES Office(RecN) ,
+	RetRecN VARCHAR(20)				FOREIGN KEY  REFERENCES Office(RecN) ,
+	GetData DATETIME ,
+	PlanDays INT ,
+	OverDays INT ,
+	Fine INT ,
+	FOREIGN KEY (ArN) REFERENCES Tenant  ,
+	FOREIGN KEY (CarN) REFERENCES Car
+)
