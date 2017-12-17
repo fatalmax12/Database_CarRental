@@ -36,3 +36,12 @@ VALUES
 ( 'CarN_8' , 'RegNum_8' , 'Lexus RX 2' , '' , 600 ) ,
 ( 'CarN_9' , 'RegNum_9' , 'Lexus RX 2' , '' , 800 ) ,
 ( 'CarN_10' , 'RegNum_10' , 'Lexus RX 3' , '' , 1000 ) ;
+
+
+INSERT INTO Contract ( InvN, ArN, CarN, GetRecN, RetRecN, GetData, PlanDays, OverDays, Fine ) 
+VALUES 
+/*VARIANT 1*/
+--insert to query1
+('1','ArN_1','CarN_1','RecN_1','RecN_10','2017-10-10','11','1','100') ,
+('2','ArN_1','CarN_1','RecN_1','RecN_10','2016-10-10','11','1','100') ,
+('3','ArN_1','CarN_2','RecN_1','RecN_10','2016-10-10','11','1','100') ;
