@@ -1,33 +1,33 @@
 
 --1
-SELECT DISTINCT Office.OffCode, Car.RegNum FROM Office
-JOIN Contract ON Contract.RetRecN = Office.RecN
-JOIN Car ON Car.CarN = Contract.CarN
-JOIN (
-	SELECT Office.OffCode, Car.RegNum FROM Office
-	JOIN Contract ON Contract.GetRecN = Office.RecN
-	JOIN Car ON Car.CarN = Contract.CarN
-) A1 ON A1.RegNum <> Car.RegNum 
 
+SELECT T.OffCode, C.RegNum
+FROM	(
+		SELECT O.OffCode, C.CarN
+		FROM Office O
+		CROSS JOIN Car C
+		EXCEPT
+		SELECT O.OffCode, C.CarN
+		FROM Office O
+		JOIN Contract C ON O.RecN = C.GetRecN
+		) T
+JOIN Car C ON C.CarN = T.CarN
 
 --2
+
 SELECT DISTINCT Office.OffCode, Office.City, Office.Addr FROM Office
 JOIN Contract ON Contract.GetRecN = Office.RecN
-JOIN Car ON Car.CarN = Contract.CarN
 JOIN (
 	SELECT 
 	Office.OffCode, 
-	COUNT(Car.RegNum) AS REG,
-	Car.CarN
+	COUNT(DISTINCT Contract.CarN) AS REG
 	 FROM Office
 	JOIN Contract ON Contract.RetRecN = Office.RecN
-	JOIN Car ON Car.CarN = Contract.CarN
 	GROUP BY 
-	Office.OffCode,
-	Car.CarN
+	Office.OffCode
 	HAVING
-	COUNT(Car.RegNum) > 1
-)AS A1 ON Car.CarN = A1.CarN
+	COUNT(DISTINCT Contract.CarN) > 1
+)AS A1 ON Office.OffCode = A1.OffCode
 
 
 --3
