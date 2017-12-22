@@ -31,10 +31,9 @@ JOIN (
 
 
 --3
-SELECT DISTINCT Tenant.*  FROM Tenant 
-JOIN Contract ON Contract.ArN = Tenant.ArN
+SELECT DISTINCT Tenant.*, COL_DOG  FROM Tenant 
 JOIN (
-SELECT Tenant.ArN, SUM(Contract.PlanDays) AS col_3  FROM Tenant
+SELECT Tenant.ArN, SUM(Contract.PlanDays) AS col_3 , COUNT(Contract.InvN) AS COL_DOG  FROM Tenant
 	JOIN Contract ON Contract.ArN = Tenant.ArN
 	GROUP BY
 		Tenant.ArN	
@@ -61,10 +60,10 @@ SELECT Office.OffCode,Office.City,Office.Addr, COUNT(DISTINCT Car.Model) AS COL 
 JOIN Contract ON Contract.GetRecN = Office.RecN
 JOIN Car ON Car.CarN = Contract.CarN
 JOIN (
-SELECT Contract.RetRecN FROM Contract
+SELECT DISTINCT Contract.RetRecN FROM Contract
 JOIN Car ON Car.CarN = Contract.CarN
 WHERE
-	Car.Model = 'BMW' --'BMW 2'
+	Car.Model like 'BMW %'
 ) AS D ON D.RetRecN = Office.RecN
 GROUP BY
 	Office.OffCode,Office.City,Office.Addr
@@ -73,8 +72,7 @@ GROUP BY
 
 SELECT 
 	Car.RegNum, Car.Model, 
-	SUM((Car.DailyPay*Con.PlanDays)+(Car.DailyPay*Con.OverDays)+(Con.OverDays*Con.Fine)) as Dohod ,
-	AVG(Con.PlanDays + Con.OverDays) AS Col, AVG(SUMM) 
+	SUM(DISTINCT (Car.DailyPay*Con.PlanDays)+(Car.DailyPay*Con.OverDays)+(Con.OverDays*Con.Fine)) as Dohod 
 FROM Car
 JOIN Contract AS Con ON Con.CarN = Car.CarN
 CROSS JOIN (
@@ -89,3 +87,7 @@ GROUP BY
 	Car.RegNum, Car.Model
 HAVING
 	AVG(Con.PlanDays + Con.OverDays) > AVG(SUMM)
+
+
+
+
